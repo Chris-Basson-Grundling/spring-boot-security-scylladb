@@ -1,16 +1,32 @@
-# Compiled class file
+### Maven ###
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.properties
+
+### Java ###
+# Compiled class files
 *.class
 
-# Log file
+# Log files
 *.log
+logs/
+*.log.*
+*.gz
 
 # BlueJ files
 *.ctxt
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
+# Archive files
 *.jar
 *.war
 *.nar
@@ -19,6 +35,134 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# virtual machine crash logs
 hs_err_pid*
 replay_pid*
+
+### Spring Boot ###
+spring-boot-*.pid
+.spring-*
+
+### Docker ###
+.env
+docker-compose.override.yml
+docker/data/
+*.env.*
+!.env.example
+
+### PostgreSQL ###
+*.pgdump
+pg_data/
+postgres-data/
+
+### ScyllaDB ###
+scylla_data/
+scylla-data/
+commitlog/
+hints/
+view_hints/
+saved_caches/
+data/
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+.idea_modules/
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+.recommenders
+
+# Eclipse specific directories
+.externalToolBuilders/
+.launch
+.apt_generated/
+.sts4-cache/
+
+### VS Code ###
+.vscode/
+.settings/
+.factorypath
+*.code-workspace
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### OS specific ###
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+### Application specific ###
+# Application properties with sensitive information
+**/application-*.properties
+**/application-*.yml
+!**/application.properties
+!**/application.yml
+!**/application-example.properties
+!**/application-example.yml
+
+# JUnit
+junit*.properties
+
+# Code coverage
+jacoco/
+*.exec
+
+# Temporary files
+temp/
+tmp/
+
+# Generated client code
+/generated/
+
+# Local configuration
+/config/application-local.*
