@@ -1,1 +1,3 @@
-# employee-shift-manager
+# spring-boot-security-scylladb
+
+
