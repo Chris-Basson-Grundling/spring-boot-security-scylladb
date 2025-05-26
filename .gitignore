@@ -82,7 +82,6 @@ out/
 .sts4-cache
 .metadata
 bin/
-tmp/
 *.tmp
 *.bak
 *.swp
@@ -141,14 +140,6 @@ $RECYCLE.BIN/
 .Trash-*
 .nfs*
 
-### Application specific ###
-# Application properties with sensitive information
-**/application-*.properties
-**/application-*.yml
-!**/application.properties
-!**/application.yml
-!**/application-example.properties
-!**/application-example.yml
 
 # JUnit
 junit*.properties
