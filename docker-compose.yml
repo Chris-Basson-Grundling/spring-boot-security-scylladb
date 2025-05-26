@@ -1,0 +1,126 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SCYLLA_CONTACT_POINTS=scylla
+      - SCYLLA_PORT=9042
+      - SCYLLA_DATACENTER=datacenter1
+      - SCYLLA_KEYSPACE=userjwt
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - SPRING_MAIL_HOST=mailhog
+      - SPRING_MAIL_PORT=1025
+    depends_on:
+      - scylla
+      - redis
+      - mailhog
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  scylla:
+    image: scylladb/scylla:5.2
+    ports:
+      - "9042:9042"
+    volumes:
+      - scylla-data:/var/lib/scylla
+    environment:
+      - SCYLLA_BATCH_SIZE_WARN_THRESHOLD_IN_KB=5
+      - SCYLLA_BATCH_SIZE_FAIL_THRESHOLD_IN_KB=50
+    command: --smp 1
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -e 'describe keyspaces'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+    # Load keyspace and tables
+  scylla-load-keyspace:
+    image: scylladb/scylla:5.2
+    depends_on:
+      scylla:
+        condition: service_healthy
+    restart: "no"
+    entrypoint: [ "cqlsh", "scylla", "-e",
+      "CREATE KEYSPACE IF NOT EXISTS userjwt_dev WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1}; 
+       USE userjwt_dev; 
+
+       CREATE TABLE IF NOT EXISTS userjwt_dev.users (
+         id UUID PRIMARY KEY, 
+         username text, 
+         email text, 
+         password text, 
+         active boolean, 
+         email_verified boolean,
+         roles set<UUID>
+       ); 
+
+       CREATE INDEX IF NOT EXISTS ON userjwt_dev.users (username); 
+       CREATE INDEX IF NOT EXISTS ON userjwt_dev.users (email); 
+
+       CREATE TABLE IF NOT EXISTS userjwt_dev.roles (
+         id UUID PRIMARY KEY, 
+         name text
+       ); 
+
+       CREATE INDEX IF NOT EXISTS ON userjwt_dev.roles (name); 
+
+       CREATE TABLE IF NOT EXISTS userjwt_dev.refresh_tokens (
+         token text PRIMARY KEY, 
+         user_id UUID, 
+         expires_at timestamp, 
+         revoked boolean
+       ); 
+
+       CREATE INDEX IF NOT EXISTS ON userjwt_dev.refresh_tokens (user_id); 
+       CREATE INDEX IF NOT EXISTS ON userjwt_dev.refresh_tokens (expires_at); 
+
+       INSERT INTO userjwt_dev.roles (id, name) VALUES (6e2ee760-0100-47a1-b5bc-e22797fc05fb, 'ROLE_ADMIN') IF NOT EXISTS; 
+       INSERT INTO userjwt_dev.roles (id, name) VALUES (8858c5c5-35bc-4fd2-8949-5f6de9444a78, 'ROLE_USER') IF NOT EXISTS;" ]
+    networks:
+      - app-network
+
+  # MailHog for email testing/sending
+  mailhog:
+    image: mailhog/mailhog
+    container_name: 'mailhog'
+    ports:
+      - "1025:1025"  # SMTP port
+      - "8025:8025"  # Web UI port
+    networks:
+      - app-network
+
+  # Redis for caching/sessions
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+volumes:
+  scylla-data:
+  redis-data:
+
+networks:
+  app-network:
+    driver: bridge
