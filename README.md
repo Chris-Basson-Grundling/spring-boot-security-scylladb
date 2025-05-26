@@ -15,6 +15,7 @@ This project demonstrates a secure, full-featured user authentication and regist
 - **User profile endpoint**
 - **ScyllaDB** as the main database, using the official ScyllaDB Java Driver
 - **Redis** for session/token storage
+- **MailHog** for email testing
 - **Currently, API tests via Postman**
 
 ---
@@ -27,6 +28,8 @@ This project demonstrates a secure, full-featured user authentication and regist
 - **MapStruct** for DTO mapping
 - **Lombok** for boilerplate reduction
 - **JUnit & Testcontainers** for testing
+- **Redis** for caching/sessions
+- **MailHog** for email capture/testing
 - **Postman** for API testing
 
 ---
@@ -37,9 +40,10 @@ This project demonstrates a secure, full-featured user authentication and regist
 
 - Java 21+
 - Maven 3.8+
-- [ScyllaDB](https://www.scylladb.com/download/) (local or cloud instance)
-- [Redis](https://redis.io/download) (for token/session cache)
-- SMTP server for email verification (configure in `application.yml`)
+- [Docker Compose](https://docs.docker.com/compose/) (for running stack easily)
+- [ScyllaDB](https://www.scylladb.com/download/) (local or cloud instance, but Docker Compose setup is provided)
+- [Redis](https://redis.io/download) (for token/session cache, included in Docker Compose)
+- SMTP server for email verification (MailHog in Docker Compose, or configure your own in `application.yml`)
 
 ### Clone the Repo
 
@@ -80,17 +84,36 @@ spring:
     expiration: 86400
 ```
 
-### Build
+---
+
+## Running with Docker Compose
+
+This project comes with a `docker-compose.yml` that sets up **ScyllaDB**, **Redis**, and **MailHog** alongside your Spring Boot application. This makes it easy to get a full environment running quickly for development or testing.
+
+### Start all services
 
 ```bash
-mvn clean install
+docker-compose up -f docker-compose.yml --build
 ```
 
-### Run
+- The app will be available at: [http://localhost:8080](http://localhost:8080)
+- MailHog (for email testing) UI: [http://localhost:8025](http://localhost:8025)
+- Redis is available at: `localhost:6379`
+- ScyllaDB CQL is available at: `localhost:9042`
+
+To run everything in the background (detached mode):
 
 ```bash
-mvn spring-boot:run
+docker-compose -f -f docker-compose.yml up --build -d
 ```
+
+#### Stop all services
+
+```bash
+docker-compose -f -f docker-compose.yml down
+```
+
+> **Note:** The `docker-compose.yml` will initialize the database schema and seed example roles on first run.
 
 ---
 
@@ -155,7 +178,7 @@ It covers:
 
 ## License
 
-[MIT](LICENSE) (update as appropriate)
+[MIT](LICENSE)
 
 ---
 
