@@ -1,6 +1,5 @@
 ### Maven ###
 target/
-!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 pom.xml.tag
@@ -11,7 +10,12 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
-.mvn/wrapper/maven-wrapper.properties
+
+# Maven Wrapper (ensure all wrapper files are committed)
+!mvnw
+!mvnw.cmd
+!.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
 
 ### Java ###
 # Compiled class files
@@ -139,7 +143,6 @@ $RECYCLE.BIN/
 .directory
 .Trash-*
 .nfs*
-
 
 # JUnit
 junit*.properties
