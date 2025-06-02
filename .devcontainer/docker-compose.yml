@@ -5,29 +5,8 @@ services:
       context: ..
       dockerfile: .devcontainer/Dockerfile
     volumes:
-      - ..:/workspace
+      - ..:/workspace:cached
     command: sleep infinity
-    networks:
-      - app-network
-
-  app:
-    build: ..
-    depends_on:
-      - scylla
-      - redis
-      - mailhog
-    environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      - SCYLLA_CONTACT_POINTS=scylla
-      - SCYLLA_PORT=9042
-      - SCYLLA_DATACENTER=datacenter1
-      - SCYLLA_KEYSPACE=userjwt
-      - SPRING_REDIS_HOST=redis
-      - SPRING_REDIS_PORT=6379
-      - SPRING_MAIL_HOST=mailhog
-      - SPRING_MAIL_PORT=1025
-    ports:
-      - "8080:8080"
     networks:
       - app-network
 
