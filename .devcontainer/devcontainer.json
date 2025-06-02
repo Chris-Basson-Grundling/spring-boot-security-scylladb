@@ -7,7 +7,7 @@
   "workspaceFolder": "/workspace",
   "shutdownAction": "stopCompose",
   "forwardPorts": [8080, 9042, 6379, 1025, 8025],
-  "postCreateCommand": "mvn -B clean install || true",
+  "postCreateCommand": "./mvnw -B clean install || true",
   "customizations": {
     "vscode": {
       "settings": {
