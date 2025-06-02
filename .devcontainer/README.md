@@ -152,6 +152,26 @@ Replace `localhost:8080` with your Codespace forwarded port if needed.
 
 ---
 
+# Update application-dev.properties:
+
+```
+# ScyllaDB Dev Configuration
+scylla.contactPoints=scylla
+scylla.port=9042
+scylla.localDatacenter=datacenter1
+scylla.keyspace=userjwt
+
+# Redis Dev Configuration
+spring.data.redis.host=redis
+spring.data.redis.port=6379
+
+# Mail configuration
+spring.mail.host=mailhog
+spring.mail.port=1025
+spring.mail.properties.mail.smtp.auth=false
+spring.mail.properties.mail.smtp.starttls.enable=false
+```
+
 **Tip:**  
 You can find a ready-to-import Postman collection here:  
 [Authentication & Role API Postman Collection](https://github.com/Chris-Basson-Grundling/spring-boot-security-scylladb/blob/8a600e6a34804160c755f1fead08552501f8c166/postman/Authentication_postman_collection.json)

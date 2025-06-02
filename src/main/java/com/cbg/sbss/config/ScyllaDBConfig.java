@@ -6,7 +6,6 @@ import com.cbg.sbss.repository.Dao.RoleDao;
 import com.cbg.sbss.repository.Dao.UserDao;
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import com.datastax.oss.driver.api.core.config.DefaultDriverOption;
 import com.datastax.oss.driver.api.core.config.DriverConfigLoader;
 import com.datastax.oss.driver.api.core.config.ProgrammaticDriverConfigLoaderBuilder;
@@ -49,32 +48,32 @@ public class ScyllaDBConfig {
         .withInt(DefaultDriverOption.CONNECTION_POOL_LOCAL_SIZE, 4)
         .withString(DefaultDriverOption.LOAD_BALANCING_LOCAL_DATACENTER, localDatacenter);
 
-    CqlSessionBuilder builder = CqlSession.builder()
+    // 1. Create session without keyspace to create keyspace if needed
+    try (CqlSession sessionNoKeyspace = CqlSession.builder()
         .addContactPoint(new InetSocketAddress(contactPoints, port))
-        .withConfigLoader(configLoaderBuilder.build());
-
-    if (keyspace != null && !keyspace.isEmpty()) {
-      builder.withKeyspace(keyspace);
+        .withLocalDatacenter(localDatacenter)
+        .withConfigLoader(configLoaderBuilder.build())
+        .build()) {
+      createKeyspaceIfNotExists(sessionNoKeyspace);
     }
 
-    CqlSession session = builder.build();
+    // 2. Create session with keyspace
+    CqlSession session = CqlSession.builder()
+        .addContactPoint(new InetSocketAddress(contactPoints, port))
+        .withLocalDatacenter(localDatacenter)
+        .withConfigLoader(configLoaderBuilder.build())
+        .withKeyspace(keyspace)
+        .build();
 
-    // Create keyspace if it doesn't exist
-    createKeyspaceIfNotExists(session);
-
-    // Create schema if it doesn't exist
+    // 3. Create tables if needed
     createSchemaIfNotExists(session);
+
     return session;
   }
 
   private void createKeyspaceIfNotExists(CqlSession session) {
     session.execute("CREATE KEYSPACE IF NOT EXISTS " + keyspace +
         " WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1}");
-
-    // If we didn't specify a keyspace in the connection, use it now
-    if (session.getKeyspace().isEmpty()) {
-      session.execute("USE " + keyspace);
-    }
   }
 
   private void createSchemaIfNotExists(CqlSession session) {
@@ -104,7 +103,7 @@ public class ScyllaDBConfig {
     // Create secondary index for role name
     session.execute("CREATE INDEX IF NOT EXISTS ON " + keyspace + ".roles (name)");
 
-    // Create refresh_tokens table (renamed column if needed)
+    // Create refresh_tokens table
     session.execute(
         "CREATE TABLE IF NOT EXISTS " + keyspace + ".refresh_tokens (" +
             "refresh_token text PRIMARY KEY, " +
