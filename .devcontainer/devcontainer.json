@@ -23,8 +23,8 @@
   },
   "features": {
     "ghcr.io/devcontainers/features/java:1": {
-      "version": "21"
-    },
-    "devcontainers/features/maven@1": {}
+      "version": "21",
+      "installMaven": "true"
+    }
   }
 }
