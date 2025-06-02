@@ -1,0 +1,66 @@
+version: "3.9"
+services:
+  devcontainer:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ..:/workspace
+    command: sleep infinity
+    networks:
+      - app-network
+
+  app:
+    build: ..
+    depends_on:
+      - scylla
+      - redis
+      - mailhog
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SCYLLA_CONTACT_POINTS=scylla
+      - SCYLLA_PORT=9042
+      - SCYLLA_DATACENTER=datacenter1
+      - SCYLLA_KEYSPACE=userjwt
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - SPRING_MAIL_HOST=mailhog
+      - SPRING_MAIL_PORT=1025
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+  scylla:
+    image: scylladb/scylla:5.2
+    ports:
+      - "9042:9042"
+    volumes:
+      - scylla-data:/var/lib/scylla
+    networks:
+      - app-network
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - app-network
+
+volumes:
+  scylla-data:
+  redis-data:
+
+networks:
+  app-network:
+    driver: bridge
