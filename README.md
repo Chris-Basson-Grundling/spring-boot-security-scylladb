@@ -104,13 +104,13 @@ docker-compose up -f docker-compose.yml --build
 To run everything in the background (detached mode):
 
 ```bash
-docker-compose -f -f docker-compose.yml up --build -d
+docker-compose -f docker-compose.yml up --build -d
 ```
 
 #### Stop all services
 
 ```bash
-docker-compose -f -f docker-compose.yml down
+docker-compose -f docker-compose.yml down
 ```
 
 > **Note:** The `docker-compose.yml` will initialize the database schema and seed example roles on first run.
