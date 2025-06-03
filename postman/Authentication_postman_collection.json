@@ -16,7 +16,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -24,7 +23,9 @@
 									"    pm.collectionVariables.set(\"admin_jwt\", json.accessToken);",
 									"    pm.collectionVariables.set(\"admin_refresh_token\", json.refreshToken);",
 									"});"
-								]
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -38,7 +39,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \"username\": \"admin\", \"password\": \"admin123\" }"
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/auth/sign-in",
@@ -60,7 +61,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -68,18 +68,15 @@
 									"    pm.collectionVariables.set(\"admin_jwt\", json.accessToken);",
 									"    pm.collectionVariables.set(\"admin_refresh_token\", json.refreshToken);",
 									"});"
-								]
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{admin_refresh_token}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{base_url}}/api/auth/refresh",
 							"host": [
@@ -129,13 +126,14 @@
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"    pm.collectionVariables.set(\"role_id\", pm.response.json().id);",
 									"});"
-								]
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -159,7 +157,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \"name\": \"TEST\" }"
+							"raw": "{\n    \"name\": \"TEST\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/roles",
@@ -237,13 +235,14 @@
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"    pm.expect(pm.response.json().name).to.eql(\"UPDATED_TEST\");",
 									"});"
-								]
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -267,7 +266,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \"name\": \"UPDATED_TEST\" }"
+							"raw": "{\n    \"name\": \"UPDATED_TEST\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/roles/{{role_id}}",
@@ -331,12 +330,14 @@
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 204\", function () {",
 									"    pm.response.to.have.status(204);",
+									"    pm.collectionVariables.set(\"admin_jwt\", \"\");",
 									"});"
-								]
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -378,7 +379,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -386,7 +386,9 @@
 									"    pm.collectionVariables.set(\"testuser1_jwt\", json.accessToken);",
 									"    pm.collectionVariables.set(\"testuser1_refresh_token\", json.refreshToken);",
 									"});"
-								]
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -400,7 +402,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \"username\": \"testuser1\", \"password\": \"testuser123\" }"
+							"raw": "{\n    \"username\": \"testuser1\",\n    \"password\": \"testuser123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/auth/sign-in",
@@ -422,7 +424,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -430,18 +431,15 @@
 									"    pm.collectionVariables.set(\"testuser1_jwt\", json.accessToken);",
 									"    pm.collectionVariables.set(\"testuser1_refresh_token\", json.refreshToken);",
 									"});"
-								]
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{testuser1_refresh_token}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{base_url}}/api/auth/refresh",
 							"host": [
@@ -491,12 +489,14 @@
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 204\", function () {",
 									"    pm.response.to.have.status(204);",
+									"    pm.collectionVariables.set(\"testuser1_jwt\", \"\");",
 									"});"
-								]
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -538,12 +538,13 @@
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Created (201) or Conflict (409)\", function () {",
 									"    pm.expect([201,409]).to.include(pm.response.code);",
 									"});"
-								]
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -557,7 +558,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \"username\": \"testuser2\", \"password\": \"testuser123\", \"email\": \"testuser2@gmail.com\" }"
+							"raw": "{\n    \"username\": \"testuser2\",\n    \"password\": \"testuser123\",\n    \"email\": \"testuser2@gmail.com\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/auth/sign-up",
@@ -617,7 +618,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Allow 200 Success (must provide correct OTP manually)\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -628,7 +628,9 @@
 									"        }",
 									"    }",
 									"});"
-								]
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -642,7 +644,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \"email\": \"testuser2@gmail.com\", \"otp\": \"<INSERT_OTP_HERE>\" }"
+							"raw": "{\n    \"email\": \"testuser2@gmail.com\",\n    \"otp\": \"<INSERT_OTP_HERE>\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/auth/verify-email",
@@ -664,7 +666,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -672,7 +673,9 @@
 									"    pm.collectionVariables.set(\"testuser2_jwt\", json.accessToken);",
 									"    pm.collectionVariables.set(\"testuser2_refresh_token\", json.refreshToken);",
 									"});"
-								]
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -686,7 +689,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \"username\": \"testuser2\", \"password\": \"testuser123\" }"
+							"raw": "{\n    \"username\": \"testuser2\",\n    \"password\": \"testuser123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/auth/sign-in",
@@ -708,7 +711,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -716,18 +718,15 @@
 									"    pm.collectionVariables.set(\"testuser2_jwt\", json.accessToken);",
 									"    pm.collectionVariables.set(\"testuser2_refresh_token\", json.refreshToken);",
 									"});"
-								]
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{testuser2_refresh_token}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{base_url}}/api/auth/refresh",
 							"host": [
@@ -817,6 +816,28 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
 		}
 	],
 	"variable": [
