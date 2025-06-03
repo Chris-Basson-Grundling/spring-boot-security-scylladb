@@ -2,6 +2,7 @@ package com.cbg.sbss.service;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -12,18 +13,15 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 public class JwtService {
 
   private final String issuer;
-
   private final Duration ttl;
-
   private final JwtEncoder jwtEncoder;
 
-  public String generateToken(final UUID userId) {
+  public String generateToken(final UUID userId, final List<String> roles) {
     final var issuedAt = Instant.now();
 
     final var claimsSet = JwtClaimsSet.builder().subject(userId.toString()).issuer(issuer)
-        .issuedAt(issuedAt).expiresAt(issuedAt.plus(ttl)).build();
+        .issuedAt(issuedAt).expiresAt(issuedAt.plus(ttl)).claim("roles", roles).build();
 
     return jwtEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();
   }
-
 }

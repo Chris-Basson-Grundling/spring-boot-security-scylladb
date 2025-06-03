@@ -45,52 +45,6 @@ services:
       timeout: 10s
       retries: 5
 
-    # Load keyspace and tables
-  scylla-load-keyspace:
-    image: scylladb/scylla:5.2
-    depends_on:
-      scylla:
-        condition: service_healthy
-    restart: "no"
-    entrypoint: [ "cqlsh", "scylla", "-e",
-      "CREATE KEYSPACE IF NOT EXISTS userjwt_dev WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1}; 
-       USE userjwt_dev; 
-
-       CREATE TABLE IF NOT EXISTS userjwt_dev.users (
-         id UUID PRIMARY KEY, 
-         username text, 
-         email text, 
-         password text, 
-         active boolean, 
-         email_verified boolean,
-         roles set<UUID>
-       ); 
-
-       CREATE INDEX IF NOT EXISTS ON userjwt_dev.users (username); 
-       CREATE INDEX IF NOT EXISTS ON userjwt_dev.users (email); 
-
-       CREATE TABLE IF NOT EXISTS userjwt_dev.roles (
-         id UUID PRIMARY KEY, 
-         name text
-       ); 
-
-       CREATE INDEX IF NOT EXISTS ON userjwt_dev.roles (name); 
-
-       CREATE TABLE IF NOT EXISTS userjwt_dev.refresh_tokens (
-         token text PRIMARY KEY, 
-         user_id UUID, 
-         expires_at timestamp, 
-         revoked boolean
-       ); 
-
-       CREATE INDEX IF NOT EXISTS ON userjwt_dev.refresh_tokens (user_id); 
-       CREATE INDEX IF NOT EXISTS ON userjwt_dev.refresh_tokens (expires_at); 
-
-       INSERT INTO userjwt_dev.roles (id, name) VALUES (6e2ee760-0100-47a1-b5bc-e22797fc05fb, 'ROLE_ADMIN') IF NOT EXISTS; 
-       INSERT INTO userjwt_dev.roles (id, name) VALUES (8858c5c5-35bc-4fd2-8949-5f6de9444a78, 'ROLE_USER') IF NOT EXISTS;" ]
-    networks:
-      - app-network
-
   # MailHog for email testing/sending
   mailhog:
     image: mailhog/mailhog
